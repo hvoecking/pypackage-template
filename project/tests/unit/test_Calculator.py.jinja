@@ -1,0 +1,23 @@
+import unittest
+from argparse import ArgumentParser
+from unittest.mock import MagicMock, patch
+
+from {{ package_name }}.Calculator import Calculator
+
+
+class TestCalculator(unittest.TestCase):
+    def test_add(self):
+        # Create a mock object for ArgumentParser.parse_args
+        mock_parse_args = MagicMock()
+        mock_parse_args.a = 12
+        mock_parse_args.b = 21
+
+        # Replace the parse_args method with the mock object
+        with patch.object(ArgumentParser, "parse_args", return_value=mock_parse_args):
+            # Initialize the Calculator class with the mock ArgumentParser
+            calculator = Calculator(ArgumentParser())
+
+            # Test the add method
+            result = calculator.add()
+            expected = 33
+            self.assertEqual(result, expected)

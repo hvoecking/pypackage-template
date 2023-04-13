@@ -1,1 +1,49 @@
+"""{{ project_name }}.
+
+{{ project_short_description }}
+"""
+
+__author__ = "{{ full_name }}"
+__email__ = "{{ email }}"
 __version__ = "0.0.0"
+
+
+import sys
+from argparse import ArgumentDefaultsHelpFormatter, ArgumentParser
+
+from {{ package_name }}.Calculator import Calculator
+
+
+def main() -> int:
+    """Main entry point for the {{ project_slug }}.
+
+    This method sets up the argument parser and initializes the main class.
+
+    Returns:
+        int: The exit code.
+    """
+    parser = ArgumentParser(
+        prog="{{ project_slug }}",
+        description=", ".join(
+            [
+                f"{__package__}",
+                f"version {__version__}",
+                f"by {__author__} <{__email__}>",
+            ],
+        ),
+        epilog=__doc__,
+        formatter_class=ArgumentDefaultsHelpFormatter,
+    )
+
+    # Initialize your main class here and pass the parser to it
+    calculator = Calculator(parser)
+    print(f"The resulting sum is: {calculator.add()}")
+
+    return 0
+
+
+if "__main__" == __name__:
+    try:
+        exit(main())
+    except KeyboardInterrupt:  # Avoid traceback on Ctrl+C
+        sys.exit("\nERROR: Interrupted by user")
