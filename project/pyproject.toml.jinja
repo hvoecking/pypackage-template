@@ -25,9 +25,16 @@ packages = [
 "Changelog" = "https://github.com/{{ github_username }}/{{ project_slug }}/blob/main/CHANGELOG.md"
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = "^3.8.1"
 
 [tool.poetry.group.dev.dependencies]
+black = "^23.3.0"
+isort = "^5.12.0"
+ruff = "^0.0.261"
+mypy = "^1.2.0"
+{%- if setup_pre_commit %}
+pre-commit = "^3.2.2"
+{%- endif %}
 pytest = "^7.0"
 pytest-cov = "^3.0"
 {%- if documentation %}
@@ -97,3 +104,6 @@ ignore_errors = true
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+main = "{{ package_name }}:main"
