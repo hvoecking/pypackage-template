@@ -1,12 +1,36 @@
 import typer
-from rich import print
+from typer import Option
 
-from .main import add
+from . import __author__, __email__, __version__
+from .Calculator import Calculator
 
-app = typer.Typer()
+app = typer.Typer(
+    epilog=__doc__,
+    help=", ".join(
+        [
+            f"{__package__}",
+            f"version {__version__}",
+            f"by {__author__} <{__email__}>",
+        ],
+    ),
+    name="{{ project_slug }}",
+)
 
 
-@app.command()
-def main(n1: int, n2: int) -> None:
-    """Add the arguments and print the result."""
-    print(add(n1, n2))
+@app.command("add")
+def main(
+    a: int = Option(..., help="The first number."),
+    b: int = Option(..., help="The second number."),
+) -> int:
+    """Main entry point for {{ project_slug }}.
+
+    This method sets up the argument parser and initializes the main class.
+
+    Returns:
+        int: The exit code.
+    """
+    calculator = Calculator(a, b)
+    result = calculator.add()
+    print(f"The result is: {result}")
+
+    return 0

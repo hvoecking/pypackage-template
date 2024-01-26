@@ -1,5 +1,10 @@
 """Make the CLI runnable using python -m {{ package_name }}."""
+import sys
 
 from .cli import app
 
-app(prog_name="{{ cli_name }}")
+if "__main__" == __name__:
+    try:
+        exit(app())
+    except KeyboardInterrupt:  # Avoid traceback on Ctrl+C
+        sys.exit("\nERROR: Interrupted by user")
