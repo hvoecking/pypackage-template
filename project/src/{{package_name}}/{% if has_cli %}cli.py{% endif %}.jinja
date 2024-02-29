@@ -1,8 +1,29 @@
+import logging
+import os
+from typing import Optional
+
 import typer
-from typer import Option
+from dotenv import load_dotenv
+from pydantic_settings import BaseSettings
 
 from . import __author__, __email__, __version__
 from .Calculator import Calculator
+
+logger = logging.getLogger(__name__)
+
+# Ensure `.env.secret` takes precedence over `.env`
+dotenv_path = os.path.join(os.getcwd(), ".env")
+dotenv_secret_path = os.path.join(os.getcwd(), ".env.secret")
+load_dotenv(dotenv_path=dotenv_path, override=False)
+load_dotenv(dotenv_path=dotenv_secret_path, override=True)
+
+
+class AppConfig(BaseSettings):
+    log_level: int
+
+    class Config:
+        env_file_encoding = "utf-8"
+
 
 app = typer.Typer(
     epilog=__doc__,
@@ -17,10 +38,57 @@ app = typer.Typer(
 )
 
 
+def setup_logging(log_level: Optional[int | str] = None, verbosity: int = 0) -> int:
+    if log_level is not None:
+        try:
+            log_level = int(log_level)
+        except (ValueError, TypeError):
+            log_level = log_level.upper()
+        logging.basicConfig(level=log_level)
+    else:
+        # Adjust log level based on verbosity
+        if verbosity == 0:
+            level = logging.ERROR
+        elif verbosity == 1:
+            level = logging.WARNING
+        elif verbosity == 2:
+            level = logging.INFO
+        else:  # verbosity >= 3
+            level = logging.DEBUG
+        logging.basicConfig(level=level)
+
+    return logging.getLogger().getEffectiveLevel()
+
+
+@app.callback()
+def main(
+    ctx: typer.Context,
+    log_level: str = typer.Option(
+        None,
+        "--log-level",
+        help="Set the specific log level (e.g., 10 or DEBUG, 20 or INFO, etc.).",
+        envvar="LOG_LEVEL",
+    ),
+    verbosity: int = typer.Option(
+        0,
+        "--verbosity",
+        "-v",
+        count=True,
+        help="Increase verbosity if no log-level is defined.",
+    ),
+):
+    """
+    Main entry point for the CLI, handling global options.
+    """
+
+    ctx.obj = AppConfig(log_level=setup_logging(log_level, verbosity))
+
+
 @app.command("add")
 def main(
-    a: int = Option(..., help="The first number."),
-    b: int = Option(..., help="The second number."),
+    ctx: typer.Context,
+    a: int = typer.Option(..., help="The first number."),
+    b: int = typer.Option(..., help="The second number."),
 ) -> int:
     """Main entry point for {{ project_slug }}.
 
@@ -29,8 +97,15 @@ def main(
     Returns:
         int: The exit code.
     """
+    config = ctx.obj
+    logger.info(f"Starting bot with log_level={config.log_level}")
+
     calculator = Calculator(a, b)
     result = calculator.add()
     print(f"The result is: {result}")
 
     return 0
+
+
+if __name__ == "__main__":
+    app()
