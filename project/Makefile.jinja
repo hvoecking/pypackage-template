@@ -63,7 +63,7 @@ mypy: $(SRC_PATH) tests
 
 .PHONY: main ## Runs the main program
 main:
-	$(RUN) {{ cli_name }} --a 21 --b 42
+	$(RUN) {{ cli_name }} add --a 21 --b 42
 
 .PHONY: run ## Run everything
 run: main
