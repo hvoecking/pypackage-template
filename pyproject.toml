@@ -9,6 +9,7 @@ description = "A template for generating a Python package"
 license = { text = "MIT" }
 authors = [
   { name = "Bruno Alla", email = "alla.brunoo@gmail.com" },
+  { name = "Heye Voecking", email = "hello@heye.dev" },
 ]
 requires-python = ">=3.9"
 classifiers = [
