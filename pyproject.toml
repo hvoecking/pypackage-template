@@ -6,7 +6,7 @@ requires = [ "poetry-core>=1" ]
 name = "pypackage-template"
 version = "0.1.0"
 description = "A template for generating a Python package"
-authors = [ "Bruno Alla <alla.brunoo@gmail.com>" ]
+authors = [ "Bruno Alla <alla.brunoo@gmail.com>", "Heye Voecking <heye.voecking@gmail.com>" ]
 license = "MIT"
 package-mode = false
 
