@@ -78,10 +78,11 @@ furo = { version = ">=2023.5.20", python = ">=3.11" }
 sphinx-autobuild = { version = ">=2024.0.0", python = ">=3.11" }
 {%- endif %}
 
+
 [tool.ruff]
 target-version = "py38"
 line-length = 88
-lint.select = [
+select = [
   "B",   # flake8-bugbear
   "D",   # flake8-docstrings
   "C4",  # flake8-comprehensions
@@ -93,7 +94,7 @@ lint.select = [
   "I",   # isort
   "RUF", # ruff specific
 ]
-lint.ignore = [
+ignore = [
   "D203", # 1 blank line required before class docstring
   "D212", # Multi-line docstring summary should start at the first line
   "D100", # Missing docstring in public module
@@ -101,12 +102,12 @@ lint.ignore = [
   "D107", # Missing docstring in `__init__`
   "D401", # First line of docstring should be in imperative mood
 ]
-lint.per-file-ignores."conftest.py" = [ "D100" ]
+per-file-ignores."conftest.py" = [ "D100" ]
 {%- if documentation %}
-lint.per-file-ignores."docs/conf.py" = [ "D100" ]
+per-file-ignores."docs/conf.py" = [ "D100" ]
 {%- endif %}
-lint.per-file-ignores."setup.py" = [ "D100" ]
-lint.per-file-ignores."tests/**/*" = [
+per-file-ignores."setup.py" = [ "D100" ]
+per-file-ignores."tests/**/*" = [
   "D100",
   "D101",
   "D102",
@@ -114,7 +115,8 @@ lint.per-file-ignores."tests/**/*" = [
   "D104",
   "S101",
 ]
-lint.isort.known-first-party = [ "{{ package_name }}", "tests" ]
+[tool.ruff.isort]
+known-first-party = ["rsh_backend", "tests"]
 
 [tool.pytest.ini_options]
 addopts = """\
