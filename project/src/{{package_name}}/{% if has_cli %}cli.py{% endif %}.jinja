@@ -121,7 +121,7 @@ def add(
         int: The exit code.
     """
     config = ctx.obj
-    logger.info(f"Starting bot with log_level={config.log_level}")
+    logger.info(f"Starting app with log_level={config.log_level}")
 
     calculator = Calculator(a, b)
     result = calculator.add()
