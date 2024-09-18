@@ -85,10 +85,10 @@ def main(
 
 
 @app.command("add")
-def main(
+def add(
     ctx: typer.Context,
-    a: int = typer.Option(..., help="The first number."),
-    b: int = typer.Option(..., help="The second number."),
+    a: int = typer.Argument(..., help="The first number."),
+    b: int = typer.Argument(..., help="The second number."),
 ) -> int:
     """Main entry point for {{ project_slug }}.
 
