@@ -3,8 +3,9 @@ import os
 from typing import Optional
 
 import typer
+from colorama import Fore, Style
 from dotenv import load_dotenv
-from pydantic_settings import BaseSettings, ConfigDict
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from . import __author__, __email__, __version__
 from .Calculator import Calculator
@@ -20,9 +21,11 @@ load_dotenv(dotenv_path=dotenv_secret_path, override=True)
 
 
 class AppConfig(BaseSettings):
+    """Configuration settings for the application."""
+
     log_level: int
 
-    model_config = ConfigDict(env_file_encoding="utf-8")
+    model_config = SettingsConfigDict(env_file_encoding="utf-8")
 
 
 app = typer.Typer(
@@ -38,14 +41,20 @@ app = typer.Typer(
 )
 
 
-def setup_logging(log_level: Optional[int | str] = None, verbosity: int = 0) -> int:
-    if log_level is not None:
-        try:
-            log_level = int(log_level)
-        except (ValueError, TypeError):
-            log_level = log_level.upper()
-        logging.basicConfig(level=log_level)
-    else:
+def setup_logging(
+    log_level: Optional[int | str] = None, verbosity: Optional[int] = None
+) -> int:
+    """
+    Configure logging based on provided log level or verbosity.
+
+    log_level: Specific log level (int or str).
+    verbosity: Verbosity level to determine log level.
+
+    Returns:
+    -------
+        int: Effective log level.
+    """
+    if verbosity is not None:
         # Adjust log level based on verbosity
         if verbosity == 0:
             level = logging.ERROR
@@ -55,7 +64,21 @@ def setup_logging(log_level: Optional[int | str] = None, verbosity: int = 0) -> 
             level = logging.INFO
         else:  # verbosity >= 3
             level = logging.DEBUG
-        logging.basicConfig(level=level)
+    elif log_level is not None:
+        if isinstance(log_level, str):
+            level = getattr(logging, log_level.upper())
+        else:
+            level = log_level
+    else:
+        level = logging.WARNING
+
+    # Create a colorful formatter
+    format_str = (
+        f"{Style.BRIGHT}{Fore.CYAN}%(asctime)s{Style.RESET_ALL}"
+        f" {Style.BRIGHT}{Fore.MAGENTA}%(levelname)s{Style.RESET_ALL}"
+        f" %(message)s"
+    )
+    logging.basicConfig(level=level, force=True, format=format_str)
 
     return logging.getLogger().getEffectiveLevel()
 
