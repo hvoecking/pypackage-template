@@ -11,6 +11,7 @@ license = "MIT"
 
 [tool.poetry.dependencies]
 python = "^3.8"
+ruff = "^0.3.0"
 
 [tool.poetry.group.dev.dependencies]
 copier = "^9.0.0"
