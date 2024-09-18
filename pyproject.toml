@@ -19,7 +19,9 @@ classifiers = [
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
 ]
-dependencies = [  ]
+dependencies = [ 
+  "ruff=^0.3.0",
+]
 
 [dependency-groups]
 dev = [
