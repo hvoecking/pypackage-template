@@ -23,19 +23,19 @@ help:
 include .env
 export
 
-RUN := poetry run
-PYTHON := $(RUN) python
+RUN := uv run
+PYTHON := uv python
 RUN_MODULE := $(PYTHON) -m
 SRC_PATH := src/{{package_name}}
 TEST_PATH := tests
 
 .PHONY: install ## Installs all dependencies
-install: install-poetry
+install: install-uv
 	$(RUN) pre-commit
 
-.PHONY: install-poetry ## Installs all dependencies via poetry
-install-poetry:
-	poetry install
+.PHONY: install-uv ## Installs all dependencies via uv
+install-uv:
+	uv sync
 
 .PHONY: install-pip ## Installs all dependencies via pip
 install-pip:
@@ -43,7 +43,7 @@ install-pip:
 
 .PHONY: requirements.txt ## Refresh requirements.txt file
 requirements.txt:
-	poetry export -f requirements.txt --output requirements.txt
+	uv pip export -f requirements.txt --output requirements.txt
 
 .PHONY: check ## Runs all code checks and tests
 check: auto-format lint type-check test
